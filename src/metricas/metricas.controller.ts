@@ -1,9 +1,9 @@
 import {
+  BadRequestException,
   Controller,
   Get,
   Param,
   UseGuards,
-  Request,
 } from '@nestjs/common';
 import { MetricasService } from './metricas.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -25,11 +25,14 @@ export class MetricasController {
     return this.metricasService.obtenerResumen();
   }
 
-  @Roles(UserRole.ADMIN)
   @Get('ventas/:periodo')
-  getVentasPorPeriodo(@Param('periodo') periodo: string) {
-    return this.metricasService.obtenerTopVendedores(periodo);
+getVentasPorPeriodo(@Param('periodo') periodo: string) {
+  const limit = parseInt(periodo, 10);
+  if (isNaN(limit)) {
+    throw new BadRequestException('El periodo debe ser un número válido.');
   }
+  return this.metricasService.obtenerTopVendedores(limit);
+}
 
   @Roles(UserRole.ADMIN)
   @Get('clientes-por-estado')

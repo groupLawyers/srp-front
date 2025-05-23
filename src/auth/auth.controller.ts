@@ -32,8 +32,6 @@ export class AuthController {
     return this.authService.register(registerDto);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
     return this.authService.getProfile(req.user.userId);

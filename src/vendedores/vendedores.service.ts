@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Usuario } from '../usuarios/entities/usuario.entity';
+import { UserRole, Usuario } from '../usuarios/entities/usuario.entity';
 import { ClientesService } from '../clientes/clientes.service';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class VendedoresService {
 
   async findAll() {
     return this.usuariosRepository.find({
-      where: { role: 'vendedor' },
+      where: { role: UserRole.VENDEDOR },
       select: ['id', 'nombre', 'email', 'avatar', 'telefono', 'bio'],
     });
   }
@@ -31,7 +31,7 @@ export class VendedoresService {
     }
 
     const vendedor = await this.usuariosRepository.findOne({
-      where: { id, role: 'vendedor' },
+      where: { id, role: UserRole.VENDEDOR },
       select: ['id', 'nombre', 'email', 'avatar', 'telefono', 'bio'],
       relations: ['clientes'],
     });
@@ -69,7 +69,7 @@ export class VendedoresService {
   async assignClient(vendedorId: string, clienteId: string, user: any) {
     const vendedor = await this.usuariosRepository.findOneBy({
       id: vendedorId,
-      role: 'vendedor',
+      role: UserRole.VENDEDOR,
     });
     if (!vendedor) {
       throw new NotFoundException('Vendedor no encontrado');

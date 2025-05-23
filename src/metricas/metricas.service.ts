@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Cliente } from '../clientes/entities/cliente.entity';
+import { Cliente, ClienteEstado } from '../clientes/entities/cliente.entity';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 
 @Injectable()
@@ -16,10 +16,10 @@ export class MetricasService {
   async obtenerResumen() {
     const totalClientes = await this.clientesRepository.count();
     const clientesAceptados = await this.clientesRepository.count({
-      where: { estado: 'aceptado' },
+      where: { estado: ClienteEstado.ACEPTADO },
     });
     const clientesRechazados = await this.clientesRepository.count({
-      where: { estado: 'rechazado' },
+      where: { estado: ClienteEstado.RECHAZADO },
     });
     const clientesPagados = await this.clientesRepository.count({
       where: { pagado: true },
@@ -48,7 +48,7 @@ export class MetricasService {
     }, {});
   }
 
-  async obtenerTopVendedores(limit = 5) {
+  async obtenerTopVendedores(limit = 5) { 
     return this.usuariosRepository
       .createQueryBuilder('usuario')
       .leftJoin('usuario.clientes', 'cliente')

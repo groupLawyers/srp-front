@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cliente } from './entities/cliente.entity';
-import { Usuario } from '../usuarios/entities/usuario.entity';
+import { UserRole, Usuario } from '../usuarios/entities/usuario.entity';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { ClienteEstado } from './entities/cliente.entity';
@@ -19,12 +19,13 @@ export class ClientesService {
   ) {}
 
   async create(createClienteDto: CreateClienteDto, user: Usuario) {
-    const cliente = this.clientesRepository.create({
-      ...createClienteDto,
-      vendedor: user.role === 'vendedor' ? user : null,
-    });
-    return this.clientesRepository.save(cliente);
-  }
+  const cliente = this.clientesRepository.create({
+    ...createClienteDto,
+    vendedor: user.role === UserRole.VENDEDOR ? user : undefined,
+  });
+  return this.clientesRepository.save(cliente);
+}
+
 
   async findAll(user: Usuario) {
     if (user.role === 'admin') {

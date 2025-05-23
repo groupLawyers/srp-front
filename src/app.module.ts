@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { ClientesModule } from './clientes/clientes.module';
@@ -16,12 +16,17 @@ import databaseConfig from './config/database.config';
       load: [databaseConfig, jwtConfig],
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({
-        // ...databaseConfig(),
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: configService.get<'postgres'>('database.type'),
+        url: configService.get<string>('database.url'),
         autoLoadEntities: true,
+        synchronize: configService.get<boolean>('database.synchronize'),
+        ssl:{rejectUnauthorized: false},
       }),
     }),
-    AuthModule,
+    forwardRef(() => AuthModule),
     UsuariosModule,
     ClientesModule,
     VendedoresModule,
