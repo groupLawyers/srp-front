@@ -27,7 +27,7 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usuariosRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'password', 'role', 'nombre'],
+      select: ['id', 'email', 'password', 'role', 'name'],
     });
 
     if (user && (await user.comparePassword(pass))) {
@@ -50,7 +50,7 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
-        nombre: user.nombre,
+        name: user.name,
         role: user.role,
       },
     };
@@ -74,7 +74,7 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
-        nombre: user.nombre,
+        name: user.name,
         role: user.role,
       },
     };
@@ -83,7 +83,7 @@ export class AuthService {
   async getProfile(userId: string) {
     return this.usuariosRepository.findOne({
       where: { id: userId },
-      select: ['id', 'email', 'nombre', 'role', 'avatar', 'telefono', 'bio'],
+      select: ['id', 'email', 'name', 'role', 'avatar', 'telefono', 'bio'],
     });
   }
 

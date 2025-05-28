@@ -22,7 +22,7 @@ export class Usuario {
   id: string;
 
   @Column({ length: 100 })
-  nombre: string;
+  name: string;
 
   @Column({ unique: true, length: 100 })
   email: string;

@@ -8,6 +8,8 @@ import { VendedoresModule } from './vendedores/vendedores.module';
 import { MetricasModule } from './metricas/metricas.module';
 import jwtConfig from './config/jwt.config';
 import databaseConfig from './config/database.config';
+import { GeminiService } from './gemini/gemini.service';
+import { ChatbotController } from './gemini/chatbot/ask.chatbot.controller';
 
 @Module({
   imports: [
@@ -32,5 +34,7 @@ import databaseConfig from './config/database.config';
     VendedoresModule,
     MetricasModule,
   ],
+  providers: [GeminiService],
+  controllers: [ChatbotController],
 })
 export class AppModule {}

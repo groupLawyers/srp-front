@@ -10,7 +10,7 @@ import { UserRole } from 'src/usuarios/entities/usuario.entity';
 export class RegisterDto {
   @IsString()
   @IsNotEmpty()
-  nombre: string;
+  name: string;
 
   @IsEmail()
   @IsNotEmpty()

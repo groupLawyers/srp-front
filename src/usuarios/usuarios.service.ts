@@ -40,7 +40,7 @@ export class UsuariosService {
       );
     }
     return this.usuariosRepository.find({
-      select: ['id', 'nombre', 'email', 'role', 'avatar', 'telefono', 'bio'],
+      select: ['id', 'name', 'email', 'role', 'avatar', 'telefono', 'bio'],
     });
   }
 
@@ -53,7 +53,7 @@ export class UsuariosService {
 
     const usuario = await this.usuariosRepository.findOne({
       where: { id },
-      select: ['id', 'nombre', 'email', 'role', 'avatar', 'telefono', 'bio'],
+      select: ['id', 'name', 'email', 'role', 'avatar', 'telefono', 'bio'],
     });
 
     if (!usuario) {

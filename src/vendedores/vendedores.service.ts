@@ -19,7 +19,7 @@ export class VendedoresService {
   async findAll() {
     return this.usuariosRepository.find({
       where: { role: UserRole.VENDEDOR },
-      select: ['id', 'nombre', 'email', 'avatar', 'telefono', 'bio'],
+      select: ['id', 'name', 'email', 'avatar', 'telefono', 'bio'],
     });
   }
 
@@ -32,7 +32,7 @@ export class VendedoresService {
 
     const vendedor = await this.usuariosRepository.findOne({
       where: { id, role: UserRole.VENDEDOR },
-      select: ['id', 'nombre', 'email', 'avatar', 'telefono', 'bio'],
+      select: ['id', 'name', 'email', 'avatar', 'telefono', 'bio'],
       relations: ['clientes'],
     });
 
@@ -50,7 +50,7 @@ export class VendedoresService {
       .leftJoinAndSelect('usuario.clientes', 'cliente')
       .select([
         'usuario.id',
-        'usuario.nombre',
+        'usuario.name',
         'usuario.email',
         'usuario.avatar',
       ])
