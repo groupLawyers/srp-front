@@ -19,29 +19,33 @@ import { UserRole } from './entities/usuario.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('usuarios')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+
 @Controller('usuarios')
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
+  @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Post()
   create(@Body() createUsuarioDto: CreateUsuarioDto, @Request() req) {
     return this.usuariosService.create(createUsuarioDto, req.user);
   }
 
-  @Roles(UserRole.ADMIN)
   @Get()
-  findAll(@Request() req) {
-    return this.usuariosService.findAll(req.user);
+  findAll() {
+    return this.usuariosService.findAll();
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req) {
     return this.usuariosService.findOne(id, req.user);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
   update(
     @Param('id') id: string,
@@ -51,6 +55,8 @@ export class UsuariosController {
     return this.usuariosService.update(id, updateUsuarioDto, req.user);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string, @Request() req) {

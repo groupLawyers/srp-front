@@ -6,7 +6,7 @@ import * as dotenv from 'dotenv';
 
 async function bootstrap() {
   dotenv.config();
-  
+
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(
@@ -17,7 +17,10 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Sistema de Registro de Prospectos API')

@@ -37,13 +37,13 @@ export class VendedoresController {
     return this.vendedoresService.findTop();
   }
 
-  @Roles(UserRole.ADMIN)
-  @Put(':id/asignar-cliente/:clienteId')
-  assignClient(
-    @Param('id') id: string,
-    @Param('clienteId') clienteId: string,
-    @Request() req,
-  ) {
-    return this.vendedoresService.assignClient(id, clienteId, req.user);
-  }
+  // @Roles(UserRole.ADMIN)
+  // @Put(':id/asignar-cliente/:clienteId')
+  // assignClient(
+  //   @Param('id') id: string,
+  //   @Param('clienteId') clienteId: string,
+  //   @Request() req,
+  // ) {
+  //   return this.vendedoresService.assignClient(id, clienteId, req.user);
+  // }
 }

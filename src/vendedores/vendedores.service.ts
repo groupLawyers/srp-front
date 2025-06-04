@@ -66,17 +66,5 @@ export class VendedoresService {
       .getRawMany();
   }
 
-  async assignClient(vendedorId: string, clienteId: string, user: any) {
-    const vendedor = await this.usuariosRepository.findOneBy({
-      id: vendedorId,
-      role: UserRole.VENDEDOR,
-    });
-    if (!vendedor) {
-      throw new NotFoundException('Vendedor no encontrado');
-    }
-
-    const cliente = await this.clientesService.findOne(clienteId, user);
-    cliente.vendedor = vendedor;
-    return this.clientesService.update(clienteId, cliente, user);
-  }
+  
 }

@@ -44,4 +44,9 @@ export class UpdateClienteDto {
   @IsDateString()
   @IsOptional()
   ultimoContacto?: Date;
+
+  @IsString()
+@IsOptional()
+vendedor?: string;
+
 }

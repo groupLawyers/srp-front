@@ -33,12 +33,8 @@ export class UsuariosService {
     return this.usuariosRepository.save(usuario);
   }
 
-  findAll(currentUser: Usuario) {
-    if (currentUser.role !== 'admin') {
-      throw new ForbiddenException(
-        'Solo los administradores pueden ver todos los usuarios',
-      );
-    }
+  findAll() {
+    
     return this.usuariosRepository.find({
       select: ['id', 'name', 'email', 'role', 'avatar', 'telefono', 'bio'],
     });

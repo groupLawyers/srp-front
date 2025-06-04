@@ -16,15 +16,15 @@ export class ClientesService {
   constructor(
     @InjectRepository(Cliente)
     private clientesRepository: Repository<Cliente>,
-  ) {}
+  ) { }
 
   async create(createClienteDto: CreateClienteDto, user: Usuario) {
-  const cliente = this.clientesRepository.create({
-    ...createClienteDto,
-    vendedor: user.role === UserRole.VENDEDOR ? user : undefined,
-  });
-  return this.clientesRepository.save(cliente);
-}
+    const cliente = this.clientesRepository.create({
+      ...createClienteDto,
+      vendedor: user.role === UserRole.VENDEDOR ? user : undefined,
+    });
+    return this.clientesRepository.save(cliente);
+  }
 
 
   async findAll(user: Usuario) {
@@ -36,6 +36,30 @@ export class ClientesService {
       relations: ['vendedor'],
     });
   }
+
+  async findByEmail(email: string) {
+    return this.clientesRepository.findOne({ where: { email } });
+  }
+
+
+  async createMany(createClienteDto: CreateClienteDto[]) {
+    const newClients: CreateClienteDto[] = [];
+
+    for (const cliente of createClienteDto) {
+      const exists = await this.findByEmail(cliente.email);
+      if (!exists) {
+        newClients.push(cliente);
+      }
+    }
+
+    if (newClients.length === 0) {
+      return [];
+    }
+
+    return this.clientesRepository.save(newClients);
+  }
+
+
 
   async findOne(id: string, user: Usuario) {
     const cliente = await this.clientesRepository.findOne({
@@ -61,7 +85,7 @@ export class ClientesService {
 
   async update(id: string, updateClienteDto: UpdateClienteDto, user: Usuario) {
     const cliente = await this.findOne(id, user);
-    return this.clientesRepository.save({ ...cliente, ...updateClienteDto });
+    return this.clientesRepository.save(cliente);
   }
 
   async remove(id: string, user: Usuario) {
@@ -69,12 +93,7 @@ export class ClientesService {
     return this.clientesRepository.remove(cliente);
   }
 
-  async findByVendedor(vendedorId: string, user: Usuario) {
-    if (user.role !== 'admin') {
-      throw new ForbiddenException(
-        'Solo los administradores pueden ver clientes por vendedor',
-      );
-    }
+  async findByVendedor(vendedorId: string, user?: Usuario) {
     return this.clientesRepository.find({
       where: { vendedor: { id: vendedorId } },
       relations: ['vendedor'],
@@ -83,12 +102,32 @@ export class ClientesService {
 
   async filterByEstado(estado: ClienteEstado, user: Usuario) {
     const where: any = { estado };
-    if (user.role !== 'admin') {
-      where.vendedor = { id: user.id };
-    }
     return this.clientesRepository.find({
       where,
       relations: ['vendedor'],
     });
   }
+
+
+  async asignarVendedor(idCliente: string, idVendedor: string, user: any) {
+  const cliente = await this.findOne(idCliente, user);
+
+  // Obtener el usuario vendedor desde el repositorio
+  const vendedor = await this.clientesRepository.manager.findOne(Usuario, {
+    where: { id: idVendedor },
+  });
+
+  if (!vendedor) {
+    throw new NotFoundException('Vendedor no encontrado');
+  }
+
+  // Asignar el objeto vendedor al cliente
+  cliente.vendedor = vendedor;
+
+  return this.clientesRepository.save(cliente);
 }
+
+}
+
+    
+
